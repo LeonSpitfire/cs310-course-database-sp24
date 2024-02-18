@@ -1,10 +1,15 @@
 package edu.jsu.mcis.cs310.coursedb.dao;
 
+//Import Json-Simple-4
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RegistrationDAO {
     
@@ -13,6 +18,10 @@ public class RegistrationDAO {
     RegistrationDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
+    
+    JsonArray jsonArray = new JsonArray();
+    JsonArray Array= new JsonArray(); 
+    JsonObject jsonobject = new JsonObject();
     
     public boolean create(int studentid, int termid, int crn) {
         
@@ -27,7 +36,17 @@ public class RegistrationDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
+                String QUERY_CREATE = "INSERT INTO registration (studentid, termid, crn) VALUES (?, ?, ?)";
+                ps = conn.prepareStatement(QUERY_CREATE);
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
+                ps.setInt(3, crn);
+                
+                int rowsAffected = ps.executeUpdate();
+                if(rowsAffected > 0){
+                    result = true;
+                    //Insert was good and succesful
+                }
                 
             }
             
@@ -58,7 +77,16 @@ public class RegistrationDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
+                 String QUERY_DELETE = "DELETE FROM registration WHERE studentid = ? AND termid=? AND crn=?";
+                 ps = conn.prepareStatement(QUERY_DELETE);
+                 ps.setInt(1, studentid);
+                 ps.setInt(2, termid);
+                 ps.setInt(3, crn);
+            
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected > 0) {
+                    result = true; // Fully Deleted it successful
+            }
                 
             }
             
@@ -88,8 +116,16 @@ public class RegistrationDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
+                String QUERY_DELETE = "DELETE FROM registration WHERE studentid = ? AND termid = ?";
+                ps = conn.prepareStatement(QUERY_DELETE);
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
                 
+                int rowAffected = ps.executeUpdate();
+                if (rowAffected > 0)
+                {
+                    result = true;
+                }
             }
             
         }
@@ -110,6 +146,7 @@ public class RegistrationDAO {
         
         String result = null;
         
+        JsonArray jsonArray = new JsonArray();
         PreparedStatement ps = null;
         ResultSet rs = null;
         ResultSetMetaData rsmd = null;
@@ -120,7 +157,23 @@ public class RegistrationDAO {
             
             if (conn.isValid(0)) {
                 
-                // INSERT YOUR CODE HERE
+                //The ORDER BY crn = ?  isnt able to compare anything
+                String QUERY_LIST = "SELECT studentid, termid, crn FROM registration WHERE studentid = ? AND termid = ?";
+                ps = conn.prepareStatement(QUERY_LIST);
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
+                rs = ps.executeQuery();
+                
+                
+                while (rs.next()){
+                    JsonObject jsonObject = new JsonObject();
+                    //jsonObject.put("studentid", rs.getInt("studentid"));
+                    jsonObject.put("studentid", rs.getInt("studentid"));
+                    jsonObject.put("termid", rs.getInt("termid"));
+                    jsonArray.add(jsonObject);
+                }
+                
+                
                 
             }
             
@@ -135,7 +188,8 @@ public class RegistrationDAO {
             
         }
         
-        return result;
+        return jsonArray.toString();
+        //return result;
         
     }
     
