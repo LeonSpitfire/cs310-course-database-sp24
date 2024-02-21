@@ -1,13 +1,15 @@
 package edu.jsu.mcis.cs310.coursedb.dao;
 
-import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 public class SectionDAO {
+    
+    //private static final String QUERY_FIND = "SELECT * FROM section WHERE termid = ? AND subjectid = ? AND num = ? ORDER BY crn";
     
     private final DAOFactory daoFactory;
     
@@ -33,6 +35,8 @@ public class SectionDAO {
             
             if (conn.isValid(0)) {
                 
+                //TermID should be an int
+                //SubjectID and Course Number should be strings
                 String QUERY_FIND = "SELECT * FROM section WHERE subjectid = ? AND num = ? AND termid = ? ORDER BY crn";
                 ps = conn.prepareStatement(QUERY_FIND);
                 ps.setString(1, subjectid);

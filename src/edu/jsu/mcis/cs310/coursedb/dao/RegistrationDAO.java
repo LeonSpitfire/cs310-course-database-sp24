@@ -1,8 +1,7 @@
 package edu.jsu.mcis.cs310.coursedb.dao;
 
 //Import Json-Simple-4
-import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +18,7 @@ public class RegistrationDAO {
         this.daoFactory = daoFactory;
     }
     
-    JsonArray jsonArray = new JsonArray();
+    JsonArray JsonArray = new JsonArray();
     JsonArray Array= new JsonArray(); 
     JsonObject jsonobject = new JsonObject();
     
@@ -167,7 +166,6 @@ public class RegistrationDAO {
                 
                 while (rs.next()){
                     JsonObject jsonObject = new JsonObject();
-                    //jsonObject.put("studentid", rs.getInt("studentid"));
                     jsonObject.put("studentid", rs.getInt("studentid"));
                     jsonObject.put("termid", rs.getInt("termid"));
                     jsonArray.add(jsonObject);
